@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dialogue Details - {{ dialogue.name }}</title>
+</head>
+<body>
+    <h1>Messages in Dialogue: {{ dialogue.name }}</h1>
+    <ul>
+        {% for message in messages %}
+            <li>{{ message.date }}: {{ message.text }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'show_dialogues' %}">Back to Dialogues</a>
+</body>
+</html>

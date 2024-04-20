@@ -1,0 +1,7 @@
+<!-- myapp/templates/search_results.html -->
+{% for dialogue in dialogues %}
+    <div>
+        <span>{{ dialogue.name }}</span>
+        <button class="add-dialogue" data-id="{{ dialogue.dialogue_id }}" data-name="{{ dialogue.name }}">Add</button>
+    </div>
+{% endfor %}

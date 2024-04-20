@@ -1,0 +1,69 @@
+<!-- templates/select_dialogues.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Dialogues</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .column {
+            float: left;
+            width: 50%;
+        }
+        .clear {
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <div class="column">
+        <h1>Search Dialogues</h1>
+        <input type="text" id="searchInput" placeholder="Search dialogues..." autocomplete="off">
+        <div id="searchResults"></div>
+    </div>
+    <div class="column">
+    <h2>Added Dialogues</h2>
+    <ul id="addedDialogues">
+        {% for dialogue in added_dialogues %}
+            <li>{{ dialogue.name }}</li>
+        {% endfor %}
+    </ul>
+</div>
+    <div class="clear"></div>
+
+    <script>
+    $(document).ready(function() {
+        $('#searchInput').on('keyup', function() {
+            var query = $(this).val();
+            if (query.length > 0) {
+                $.ajax({
+                    url: '/search-dialogues/',
+                    data: { 'search': query },
+                    success: function(data) {
+                        $('#searchResults').html(data);
+                    }
+                });
+            } else {
+                $('#searchResults').empty();
+            }
+        });
+
+        $(document).on('click', '.add-dialogue', function() {
+            var dialogueId = $(this).data('id');
+            var dialogueName = $(this).data('name');
+            $.ajax({
+                url: '/add-dialogue/',
+                method: 'POST',
+                data: {
+                    'dialogue_id': dialogueId,
+                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+                },
+                success: function() {
+                    $('#addedDialogues').append('<li>' + dialogueName + '</li>');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
