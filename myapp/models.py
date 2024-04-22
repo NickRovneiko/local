@@ -1,5 +1,3 @@
-#models.py
-
 from django.db import models
 
 class Dialogue(models.Model):
@@ -9,3 +7,13 @@ class Dialogue(models.Model):
 
     def __str__(self):
         return self.name
+
+class Message(models.Model):
+    message_id = models.BigIntegerField(unique=True)  # Уникальный идентификатор сообщения
+    user_id = models.BigIntegerField()  # ID пользователя, который отправил сообщение
+    date = models.DateTimeField()  # Дата и время отправки сообщения
+    text = models.TextField()  # Текст сообщения
+    dialogue = models.ForeignKey(Dialogue, on_delete=models.CASCADE, related_name='messages')  # Связь с диалогом
+
+    def __str__(self):
+        return f'Message {self.message_id} by User {self.user_id} on {self.date}'
