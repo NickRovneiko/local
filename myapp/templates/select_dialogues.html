@@ -1,4 +1,3 @@
-<!-- templates/select_dialogues.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,13 +21,13 @@
         <div id="searchResults"></div>
     </div>
     <div class="column">
-    <h2>Added Dialogues</h2>
-    <ul id="addedDialogues">
-        {% for dialogue in added_dialogues %}
-            <li>{{ dialogue.name }}</li>
-        {% endfor %}
-    </ul>
-</div>
+        <h2>Added Dialogues</h2>
+        <ul id="addedDialogues">
+            {% for dialogue in added_dialogues %}
+                <li>{{ dialogue.name }} (ID: {{ dialogue.dialogue_id }})</li>
+            {% endfor %}
+        </ul>
+    </div>
     <div class="clear"></div>
 
     <script>
@@ -59,7 +58,7 @@
                     'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
                 },
                 success: function() {
-                    $('#addedDialogues').append('<li>' + dialogueName + '</li>');
+                    $('#addedDialogues').append('<li>' + dialogueName + ' (ID: ' + dialogueId + ')</li>');
                 }
             });
         });
