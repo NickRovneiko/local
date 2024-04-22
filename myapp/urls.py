@@ -1,11 +1,11 @@
-from django.urls import path, re_path
+from django.urls import path
 from . import views
-from .dialogue_views import show_dialogues, trigger_fetch_dialogues
 
 urlpatterns = [
-    path('', show_dialogues, name='home'),  # Сделать страницу диалогов главной страницей приложения
-    path('dialogues/', show_dialogues, name='show_dialogues'),
-    path('fetch-dialogues/', trigger_fetch_dialogues, name='fetch_dialogues'),
-    path('search-dialogues/', views.search_dialogues, name='search_dialogues'),
-    path('add-dialogue/', views.add_dialogue, name='add_dialogue'),
+    path('', views.show_dialogues, name='home'),  # Сделать страницу диалогов главной страницей приложения
+    path('delete-dialogue/', views.delete_dialogue, name='delete-dialogue'),
+    path('search-dialogues/', views.search_dialogues, name='search-dialogues'),
+    path('add-dialogue/', views.add_dialogue, name='add-dialogue'),
+    path('load-dialogues/', views.fetch_and_save_messages, name='load-dialogues'),
+    path('get-recent-messages/', views.get_recent_messages, name='get-recent-messages'),  # Новый маршрут
 ]

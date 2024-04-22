@@ -3,32 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Select Dialogues</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        .column {
-            float: left;
-            width: 50%;
-        }
-        .clear {
-            clear: both;
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-top: 1px solid #ccc;
         }
     </style>
 </head>
 <body>
-    <div class="column">
-        <h1>Search Dialogues</h1>
-        <input type="text" id="searchInput" placeholder="Search dialogues..." autocomplete="off">
-        <div id="searchResults"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <h1>Search Dialogues</h1>
+                <input type="text" id="searchInput" class="form-control" placeholder="Search dialogues..." autocomplete="off">
+                <div id="searchResults"></div>
+            </div>
+            <div class="col-md-9">
+                <h2>Added Dialogues</h2>
+                <ul id="addedDialogues" class="list-group">
+                    {% for dialogue in added_dialogues %}
+                    <li class="list-group-item" data-dialogue-id="{{ dialogue.dialogue_id }}">
+                        {{ dialogue.name }}
+                        <button class="btn btn-sm btn-primary view-messages" data-id="{{ dialogue.dialogue_id }}">View</button>
+                        <button class="btn btn-sm btn-danger delete-dialogue" data-id="{{ dialogue.dialogue_id }}">Delete</button>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <button id="loadDialoguesButton" class="btn btn-primary">Load Dialogues</button>
+            </div>
+        </div>
     </div>
-    <div class="column">
-        <h2>Added Dialogues</h2>
-        <ul id="addedDialogues">
-            {% for dialogue in added_dialogues %}
-                <li>{{ dialogue.name }} (ID: {{ dialogue.dialogue_id }})</li>
-            {% endfor %}
-        </ul>
+    <div class="footer">
+        <h2>Recent Messages</h2>
+        <div id="recentMessagesContainer" class="d-none">
+            <button id="closeMessagesButton" class="btn btn-sm btn-danger mb-2">Close Messages</button>
+            <ul id="recentMessages" class="list-group"></ul>
+        </div>
     </div>
-    <div class="clear"></div>
 
     <script>
     $(document).ready(function() {
@@ -58,9 +75,54 @@
                     'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
                 },
                 success: function() {
-                    $('#addedDialogues').append('<li>' + dialogueName + ' (ID: ' + dialogueId + ')</li>');
+                    $('#addedDialogues').append('<li class="list-group-item" data-dialogue-id="' + dialogueId + '">' + dialogueName + ' (ID: ' + dialogueId + ') <button class="btn btn-sm btn-primary view-messages" data-id="' + dialogueId + '">View Messages</button> <button class="btn btn-sm btn-danger delete-dialogue" data-id="' + dialogueId + '">Delete</button></li>');
                 }
             });
+        });
+
+        $('#loadDialoguesButton').on('click', function() {
+            $.ajax({
+                url: '/load-dialogues/',
+                success: function(data) {
+                    $('#addedDialogues').html(data);
+                }
+            });
+        });
+
+        $(document).on('click', '.view-messages', function() {
+            var dialogueId = $(this).data('id');
+            $.ajax({
+                url: '/get-recent-messages/',
+                data: { 'dialogue_id': dialogueId },
+                success: function(data) {
+                    $('#recentMessages').html(data);
+                    $('#recentMessagesContainer').removeClass('d-none');
+                }
+            });
+        });
+
+        $(document).on('click', '.delete-dialogue', function() {
+            var dialogueId = $(this).data('id');
+            $.ajax({
+                url: '/delete-dialogue/',
+                method: 'POST',
+                data: {
+                    'dialogue_id': dialogueId,
+                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        $('li[data-dialogue-id="' + dialogueId + '"]').remove();
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                }
+            });
+        });
+
+        $('#closeMessagesButton').on('click', function() {
+            $('#recentMessagesContainer').addClass('d-none');
+            $('#recentMessages').empty();
         });
     });
     </script>

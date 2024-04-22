@@ -8,12 +8,15 @@ class Dialogue(models.Model):
     def __str__(self):
         return self.name
 
+from django.db import models
+
 class Message(models.Model):
     message_id = models.BigIntegerField(unique=True)  # Уникальный идентификатор сообщения
-    user_id = models.BigIntegerField()  # ID пользователя, который отправил сообщение
+    user_id = models.BigIntegerField(null=True)  # ID пользователя, который отправил сообщение, может быть NULL
     date = models.DateTimeField()  # Дата и время отправки сообщения
-    text = models.TextField()  # Текст сообщения
+    text = models.TextField(null=True, default='')  # Текст сообщения, по умолчанию пустой строкой
     dialogue = models.ForeignKey(Dialogue, on_delete=models.CASCADE, related_name='messages')  # Связь с диалогом
 
     def __str__(self):
-        return f'Message {self.message_id} by User {self.user_id} on {self.date}'
+        user_id_display = self.user_id if self.user_id is not None else "Unknown"
+        return f'Message {self.message_id} by User {user_id_display} on {self.date}'
