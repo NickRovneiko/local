@@ -1,4 +1,4 @@
-#views.py
+# myproject/myapp/views.py
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from .models import Dialogue, Message
 import datetime
 
-from .one_dialog import get_messages_by_dialogue_id
+from .dialogs import get_messages_by_dialogue_id
 
 from asgiref.sync import sync_to_async
 

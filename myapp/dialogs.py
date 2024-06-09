@@ -1,3 +1,4 @@
+# myproject/myapp/dialogs.py
 import asyncio
 from telethon import TelegramClient
 

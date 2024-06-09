@@ -1,4 +1,4 @@
-# myapp/telegram_client.py
+# myproject/myapp/telegram_client.py
 from telethon import TelegramClient
 from django.conf import settings
 

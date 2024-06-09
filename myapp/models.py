@@ -1,3 +1,4 @@
+# myproject/myapp/models.py
 from django.db import models
 
 class Dialogue(models.Model):
