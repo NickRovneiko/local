@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- myproject/myapp/templates/select_dialogues.html -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -36,7 +35,8 @@
                     </li>
                     {% endfor %}
                 </ul>
-                <button id="loadDialoguesButton" class="btn btn-primary">Load Dialogues</button>
+                <button id="loadMessagesButton" class="btn btn-primary">Load Messages</button>
+                <button id="loadDialoguesFromTelegramButton" class="btn btn-primary">Load Dialogues from Telegram</button>
             </div>
         </div>
     </div>
@@ -76,16 +76,27 @@
                     'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
                 },
                 success: function() {
-                    $('#addedDialogues').append('<li class="list-group-item" data-dialogue-id="' + dialogueId + '">' + dialogueName + ' (ID: ' + dialogueId + ') <button class="btn btn-sm btn-primary view-messages" data-id="' + dialogueId + '">View Messages</button> <button class="btn btn-sm btn-danger delete-dialogue" data-id="' + dialogueId + '">Delete</button></li>');
+                    $('#addedDialogues').append('<li class="list-group-item" data-dialogue-id="' + dialogueId + '">' + dialogueName + ' <button class="btn btn-sm btn-primary view-messages" data-id="' + dialogueId + '">View Messages</button> <button class="btn btn-sm btn-danger delete-dialogue" data-id="' + dialogueId + '">Delete</button></li>');
                 }
             });
         });
 
-        $('#loadDialoguesButton').on('click', function() {
+        $('#loadMessagesButton').on('click', function() {
             $.ajax({
                 url: '/load-dialogues/',
                 success: function(data) {
                     $('#addedDialogues').html(data);
+                }
+            });
+        });
+
+        $('#loadDialoguesFromTelegramButton').on('click', function() {
+            $.ajax({
+                url: '/load-dialogues-from-telegram/',
+                success: function(data) {
+                    alert(data.message);
+                    // Загрузить диалоги после обновления
+                    $('#loadMessagesButton').click();
                 }
             });
         });

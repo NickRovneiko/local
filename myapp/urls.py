@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.show_dialogues, name='home'),  # Сделать страницу диалогов главной страницей приложения
+    path('load-dialogues-from-telegram/', views.load_dialogues, name='load-dialogues-from-telegram'),
     path('delete-dialogue/', views.delete_dialogue, name='delete-dialogue'),
     path('search-dialogues/', views.search_dialogues, name='search-dialogues'),
     path('add-dialogue/', views.add_dialogue, name='add-dialogue'),
