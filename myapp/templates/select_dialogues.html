@@ -15,10 +15,7 @@
             border-top: 1px solid #ccc;
         }
         .message-text {
-            white-space: pre-wrap; /* Сохраняем пробелы и переносы строк */
-        }
-        .highlight {
-            background-color: yellow; /* Цвет подсветки */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
         }
     </style>
 </head>
@@ -26,33 +23,33 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-3">
-                <h1>Поиск Диалогов</h1>
-                <input type="text" id="searchInput" class="form-control" placeholder="Поиск диалогов..." autocomplete="off">
+                <h1>Search Dialogues</h1>
+                <input type="text" id="searchInput" class="form-control" placeholder="Search dialogues..." autocomplete="off">
                 <div id="searchResults"></div>
             </div>
             <div class="col-md-9">
-                <h2>Добавленные Диалоги</h2>
+                <h2>Added Dialogues</h2>
                 <ul id="addedDialogues" class="list-group">
                     {% for dialogue in added_dialogues %}
                     <li class="list-group-item" data-dialogue-id="{{ dialogue.dialogue_id }}">
                         {{ dialogue.name }}
-                        <button class="btn btn-sm btn-primary view-messages" data-id="{{ dialogue.dialogue_id }}">Просмотр</button>
-                        <button class="btn btn-sm btn-danger delete-dialogue" data-id="{{ dialogue.dialogue_id }}">Удалить</button>
+                        <button class="btn btn-sm btn-primary view-messages" data-id="{{ dialogue.dialogue_id }}">View</button>
+                        <button class="btn btn-sm btn-danger delete-dialogue" data-id="{{ dialogue.dialogue_id }}">Delete</button>
                     </li>
                     {% endfor %}
                 </ul>
-                <button id="loadMessagesButton" class="btn btn-primary">Загрузить Сообщения</button>
-                <button id="loadDialoguesFromTelegramButton" class="btn btn-primary">Загрузить Диалоги из Telegram</button>
-                <h2>Поиск Сообщений</h2>
-                <input type="text" id="searchMessagesInput" class="form-control" placeholder="Поиск сообщений..." autocomplete="off">
+                <button id="loadMessagesButton" class="btn btn-primary">Load Messages</button>
+                <button id="loadDialoguesFromTelegramButton" class="btn btn-primary">Load Dialogues from Telegram</button>
+                <h2>Search Messages</h2>
+                <input type="text" id="searchMessagesInput" class="form-control" placeholder="Search messages..." autocomplete="off">
                 <div id="messageSearchResults"></div>
             </div>
         </div>
     </div>
     <div class="footer">
-        <h2>Недавние Сообщения</h2>
+        <h2>Recent Messages</h2>
         <div id="recentMessagesContainer" class="d-none">
-            <button id="closeMessagesButton" class="btn btn-sm btn-danger mb-2">Закрыть Сообщения</button>
+            <button id="closeMessagesButton" class="btn btn-sm btn-danger mb-2">Close Messages</button>
             <ul id="recentMessages" class="list-group"></ul>
         </div>
     </div>
@@ -85,7 +82,7 @@
                     'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
                 },
                 success: function() {
-                    $('#addedDialogues').append('<li class="list-group-item" data-dialogue-id="' + dialogueId + '">' + dialogueName + ' <button class="btn btn-sm btn-primary view-messages" data-id="' + dialogueId + '">Просмотр Сообщений</button> <button class="btn btn-sm btn-danger delete-dialogue" data-id="' + dialogueId + '">Удалить</button></li>');
+                    $('#addedDialogues').append('<li class="list-group-item" data-dialogue-id="' + dialogueId + '">' + dialogueName + ' <button class="btn btn-sm btn-primary view-messages" data-id="' + dialogueId + '">View Messages</button> <button class="btn btn-sm btn-danger delete-dialogue" data-id="' + dialogueId + '">Delete</button></li>');
                 }
             });
         });
@@ -135,7 +132,7 @@
                     if (response.status === 'success') {
                         $('li[data-dialogue-id="' + dialogueId + '"]').remove();
                     } else {
-                        alert('Ошибка: ' + response.message);
+                        alert('Error: ' + response.message);
                     }
                 }
             });
@@ -154,22 +151,12 @@
                     data: { 'search': query },
                     success: function(data) {
                         $('#messageSearchResults').html(data);
-                        highlightText(query);
                     }
                 });
             } else {
                 $('#messageSearchResults').empty();
             }
         });
-
-        function highlightText(query) {
-            $('.message-text').each(function() {
-                var text = $(this).html();
-                var regex = new RegExp('(' + query + ')', 'gi');
-                var newText = text.replace(regex, '<span class="highlight">$1</span>');
-                $(this).html(newText);
-            });
-        }
     });
     </script>
 </body>
