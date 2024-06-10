@@ -1,0 +1,8 @@
+<ul class="list-group">
+    {% for message in messages %}
+    <li class="list-group-item">
+        <strong>{{ message.date }}:</strong>
+        <div class="message-text">{{ message.text|safe }}</div>
+    </li>
+    {% endfor %}
+</ul>

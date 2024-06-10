@@ -112,3 +112,19 @@ def delete_dialogue(request):
         else:
             return JsonResponse({'status': 'error', 'message': 'Dialogue not found'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+
+from django.db.models import Q
+
+from django.db.models import Q
+from django.utils.html import escape
+
+@csrf_exempt
+def search_messages(request):
+    search_query = request.GET.get('search', '').strip()
+    if search_query:
+        messages = Message.objects.filter(Q(text__icontains=search_query))[:50]  # Ограничиваем количество результатов
+        for message in messages:
+            message.text = escape(message.text).replace(search_query, f'<span class="highlight">{search_query}</span>')
+        html = render_to_string('message_search_results.html', {'messages': messages})
+        return HttpResponse(html)
+    return HttpResponse('')
