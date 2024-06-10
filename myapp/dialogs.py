@@ -1,8 +1,14 @@
+# main.py
 from telethon import TelegramClient
 from datetime import datetime
+import os
+from dotenv import load_dotenv
 
-api_id = '21992840'  # Ваш API ID
-api_hash = 'da0843d28758f33ad168037e277f7bb0'  # Ваш API Hash
+# Загрузка переменных окружения из файла .env
+load_dotenv()
+
+api_id = os.getenv('API_ID')
+api_hash = os.getenv('API_HASH')
 
 async def fetch_dialogues():
     client = TelegramClient('session_name', api_id, api_hash)
